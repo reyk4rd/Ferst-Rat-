@@ -1,6 +1,7 @@
 # Ferst-Rat-
  My Ferst Rat i creat it for fun like it need to get crypted to bypass the av : 
-   Commands : 
+   # Commands : 
+   
             -> !helpme                             : show this messege 
             
             -> !uhere                              : replay to you 
