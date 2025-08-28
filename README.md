@@ -55,3 +55,5 @@
             -> !tostartup                          : send file to start up (!tostartup "path of the file or name of it")
             
     ❤️
+
+ There Is Some Chat ID And Webhook Links U shoold Change To Urs
